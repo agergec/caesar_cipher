@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sezar Çarkı - Görsel Kaydırma</title>
+    <title>Sezar Çarkı - Standart Sürüm</title>
     <style>
         :root {
             --primary: #c0392b;
@@ -12,16 +12,17 @@
             --dial-size: 360px;
             --radius-plain: 152px;
             --radius-cipher: 124px;
-            --focus-top-gap: 6px;     /* how much above outer ring */
-            --focus-bottom-gap: 8px;  /* how much into inner ring */
+            --focus-top-gap: 6px;
+            --focus-bottom-gap: 8px;
             --cipher-font-size: 0.95rem;
         }
 
         * { box-sizing: border-box; }
+
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #e0e7ff, #fdf2f8);
-            color: #1f2937;
+            background-color: var(--secondary);
+            color: #333;
             margin: 0;
             padding: 20px;
             display: flex;
@@ -29,7 +30,7 @@
             min-height: 100vh;
         }
 
-        .app {
+        .app-container {
             background: white;
             width: 100%;
             max-width: 1100px;
@@ -53,6 +54,7 @@
             font-weight: 600;
             color: #2c3e50;
         }
+
         .language-switch select {
             padding: 6px 10px;
             border-radius: 8px;
@@ -69,6 +71,7 @@
             margin-bottom: 14px;
             box-shadow: 0 6px 14px rgba(0,0,0,0.04);
         }
+
         .accordion-header {
             display: flex;
             align-items: center;
@@ -79,11 +82,13 @@
             color: #2c3e50;
             background: linear-gradient(180deg, #ffffff, #f3f4f6);
         }
+
         .accordion-header span { pointer-events: none; }
-        .accordion-arrow {
-            transition: transform 0.2s ease;
-        }
+
+        .accordion-arrow { transition: transform 0.2s ease; }
+
         .accordion-arrow.open { transform: rotate(180deg); }
+
         .accordion-content {
             max-height: 0;
             overflow: hidden;
@@ -92,26 +97,29 @@
             color: #4b5563;
             line-height: 1.5;
         }
+
         .accordion-content.open {
             padding: 12px 14px 14px 14px;
         }
-        .info-links {
-            margin-top: 8px;
-        }
+
+        .info-links { margin-top: 8px; }
+
         .info-links a {
             color: #1d9bf0;
             text-decoration: none;
             font-weight: 700;
         }
+
         .info-links a:hover { text-decoration: underline; }
 
-        /* Mode switch */
+        /* Mode switch (shared) */
         .mode-switch {
             display: flex;
             justify-content: center;
             gap: 14px;
-            margin-bottom: 20px;
+            margin-bottom: 18px;
         }
+
         .mode-option {
             display: flex;
             align-items: center;
@@ -122,18 +130,35 @@
             background: #f9fafb;
             cursor: pointer;
             transition: background 0.2s, box-shadow 0.2s;
+            font-weight: 700;
         }
-        .mode-option:hover { background: #eef2ff; }
-        .mode-option input { accent-color: var(--primary); transform: scale(1.1); }
 
-        /* Key buttons */
-        .keys {
+        .mode-option:hover { background: #eef2ff; }
+
+        .mode-option input {
+            accent-color: var(--primary);
+            transform: scale(1.1);
+        }
+
+        /* Key strip (shared) */
+        .key-area {
+            margin-bottom: 16px;
+            text-align: center;
+        }
+
+        .instruction {
+            margin-bottom: 10px;
+            color: #666;
+            font-size: 0.95rem;
+        }
+
+        .key-strip {
             display: flex;
             flex-wrap: wrap;
             gap: 6px;
             justify-content: center;
-            margin-bottom: 14px;
         }
+
         .key {
             width: 36px;
             height: 42px;
@@ -147,16 +172,26 @@
             background: white;
             transition: all 0.18s ease;
             font-weight: 700;
+            position: relative;
         }
-        .key small { font-size: 0.6rem; color: #9ca3af; }
-        .key:hover { border-color: var(--primary); transform: translateY(-2px); }
+
+        .key small { font-size: 0.6rem; color: #95a5a6; }
+
+        .key:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+        }
+
         .key.active {
-            background: var(--primary);
+            background-color: var(--primary);
             color: white;
             border-color: var(--primary);
-            box-shadow: 0 8px 18px rgba(192, 57, 43, 0.35);
+            box-shadow: 0 4px 10px rgba(192, 57, 43, 0.4);
+            transform: scale(1.00);
+            z-index: 10;
         }
-        .key.active small { color: rgba(255,255,255,0.7); }
+
+        .key.active small { color: rgba(255,255,255,0.8); }
 
         /* Dial */
         .dial-section {
@@ -164,15 +199,16 @@
             grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
             gap: 20px;
             align-items: center;
-            margin-bottom: 22px;
+            margin-bottom: 18px;
         }
+
         .dial-wrapper {
             position: relative;
             width: var(--dial-size);
             height: var(--dial-size);
             margin: 0 auto;
         }
-        /* Column highlight showing aligned letters under the top marker */
+
         .focus-bridge {
             position: absolute;
             top: calc(50% - var(--radius-plain) - var(--focus-top-gap));
@@ -187,6 +223,7 @@
             pointer-events: none;
             z-index: 3;
         }
+
         .dial-ring {
             position: absolute;
             top: 50%;
@@ -195,6 +232,7 @@
             height: 100%;
             transform: translate(-50%, -50%);
         }
+
         .ring-letter {
             position: absolute;
             top: 50%;
@@ -208,6 +246,7 @@
             font-size: 1.05rem;
             line-height: 1;
         }
+
         .cipher-letter {
             color: var(--primary);
             font-size: var(--cipher-font-size);
@@ -226,36 +265,41 @@
             text-align: center;
             min-width: 140px;
         }
+
         .dial-center .title { font-size: 0.78rem; color: #6b7280; margin-bottom: 4px; }
+
         .dial-center .value { font-size: 1.35rem; font-weight: 800; color: var(--primary); }
 
         /* Slider + IO */
-        .controls {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
         .slider-row {
             display: flex;
             align-items: center;
             gap: 12px;
             padding: 12px;
-            border: 1px solid #e5e7eb;
-            border-radius: 12px;
             background: #f9fafb;
+            border-radius: 10px;
+            border: 1px solid #e5e7eb;
+            margin-bottom: 12px;
         }
+
         .slider-row label { font-weight: 700; color: #374151; min-width: 120px; }
+
         input[type="range"] { flex: 1; accent-color: var(--primary); cursor: pointer; }
-        .slider-val { font-weight: 700; color: var(--primary); min-width: 120px; text-align: right; }
+
+        .slider-value { font-weight: 700; color: var(--primary); min-width: 120px; text-align: right; }
 
         .io-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: 1fr;
             gap: 18px;
         }
+
         @media(max-width: 820px) { .io-grid { grid-template-columns: 1fr; } }
-        .box { display: flex; flex-direction: column; }
-        .box label { font-weight: 700; color: #111827; margin-bottom: 6px; }
+
+        .text-box { display: flex; flex-direction: column; }
+
+        .text-box label { font-weight: 700; color: #111827; margin-bottom: 6px; }
+
         textarea {
             min-height: 120px;
             padding: 12px;
@@ -264,16 +308,17 @@
             font-size: 1rem;
             resize: vertical;
         }
+
         textarea:focus { outline: none; border-color: var(--primary); }
-        .output { background: #f8fafc; color: #111827; }
+
+        .result-area { background: #f8fafc; color: #111827; }
     </style>
 </head>
 <body>
-<div class="app">
+<div class="app-container">
     <h1 id="title">Türkçe Sezar Çarkı</h1>
 
     <div class="language-switch">
-        <span id="languageLabel">Dil / Language:</span>
         <select id="languageSelect" onchange="setLanguage(this.value)">
             <option value="tr">Türkçe</option>
             <option value="en">English</option>
@@ -294,17 +339,25 @@
 
     <div class="mode-switch">
         <label class="mode-option">
-            <input type="radio" name="mode" value="encrypt" checked onchange="onModeChange()">
+            <input type="radio" name="mode" value="encrypt" checked onchange="handleModeChange()">
             <span id="labelEncrypt">🔒 Şifrele</span>
         </label>
         <label class="mode-option">
-            <input type="radio" name="mode" value="decrypt" onchange="onModeChange()">
+            <input type="radio" name="mode" value="decrypt" onchange="handleModeChange()">
             <span id="labelDecrypt">🔓 Çöz</span>
         </label>
     </div>
 
-    <div class="keys" id="keyStrip"></div>
+    <div class="key-area">
+        <div class="instruction" id="keyInstruction">Anahtar harfini seçin veya çarkı kaydırın:</div>
+        <div class="key-strip" id="keyStrip"></div>
+    </div>
 
+    <div class="slider-row">
+         <label for="shiftSlider" id="sliderLabel">Çarkı kaydır:</label>
+         <input type="range" id="shiftSlider" min="0" max="28" value="0" oninput="setKey(parseInt(this.value))">
+         <div class="slider-value" id="shiftValue">A (0)</div>
+    </div>
     <div class="dial-section">
         <div class="dial-wrapper">
             <div class="focus-bridge"></div>
@@ -315,20 +368,15 @@
                 <div class="value" id="centerValue">A (0)</div>
             </div>
         </div>
-        <div class="controls">
-            <div class="slider-row">
-                <label for="shiftSlider" id="sliderLabel">Çarkı kaydır:</label>
-                <input type="range" id="shiftSlider" min="0" max="28" value="0" oninput="setKey(parseInt(this.value), 'slider')">
-                <div class="slider-val" id="sliderVal">A (0)</div>
-            </div>
+        <div>
             <div class="io-grid">
-                <div class="box">
+                <div class="text-box">
                     <label id="inputLabel">Girdi:</label>
                     <textarea id="inputTxt" placeholder="Metni yazın..." oninput="updateAll()"></textarea>
                 </div>
-                <div class="box">
+                <div class="text-box">
                     <label id="outputLabel">Sonuç:</label>
-                    <textarea id="outputTxt" class="output" readonly></textarea>
+                    <textarea id="outputTxt" class="result-area" readonly></textarea>
                 </div>
             </div>
         </div>
@@ -357,15 +405,17 @@
                 title: '🇹🇷 Sezar Şifreleme',
                 language: 'Dil / Language:',
                 encrypt: '🔒 Şifrele',
-                decrypt: '🔓 Çöz',
-                slider: 'Çarkı kaydır:',
-                center: 'Kaydırma',
-                input: 'Girdi:',
-                output: 'Sonuç:',
+                decrypt: '🔓 Şifre Çöz',
+                keyInstruction: 'Anahtar Harfi Seçin (Kaydırma Miktarı)',
+                slider: 'Şifrelemek için kaydır:',
+                shift: 'Kaydırma',
+                input: 'Metin Girin',
+                output: 'Şifrelenmiş Metin',
                 infoTitle: 'Sezar Şifrelemesi Nedir?',
                 infoBody: 'Sezar şifrelemesi, alfabenin her harfini sabit bir sayı kadar kaydırarak metni gizler. Anahtar, kaç harf kaydırılacağını belirler; çözmek için aynı miktarda geri kaydırılır.',
                 infoLinkText: 'Wikipedia\'da oku',
-                infoLinkUrl: 'https://tr.wikipedia.org/wiki/Sezar_%C5%9Fifrelemesi'
+                infoLinkUrl: 'https://tr.wikipedia.org/wiki/Sezar_%C5%9Fifrelemesi',
+                center: 'Kaydırma'
             },
             toUpper: toUpperTr,
             toLower: toLowerTr
@@ -378,14 +428,16 @@
                 language: 'Language:',
                 encrypt: '🔒 Encrypt',
                 decrypt: '🔓 Decrypt',
-                slider: 'Slide the dial:',
-                center: 'Shift',
-                input: 'Input:',
-                output: 'Result:',
+                keyInstruction: 'Choose Key (Shift)',
+                slider: 'Slide',
+                shift: 'Shift',
+                input: 'Enter Text',
+                output: 'Encrypted Text',
                 infoTitle: 'What is the Caesar cipher?',
                 infoBody: 'The Caesar cipher shifts every letter in the alphabet by a fixed amount. The key is the number of steps to shift; to decrypt, you shift back by the same amount.',
                 infoLinkText: 'Read on Wikipedia',
-                infoLinkUrl: 'https://en.wikipedia.org/wiki/Caesar_cipher'
+                infoLinkUrl: 'https://en.wikipedia.org/wiki/Caesar_cipher',
+                center: 'Shift'
             },
             toUpper: defaultUpper,
             toLower: defaultLower
@@ -398,14 +450,16 @@
                 language: 'Langue :',
                 encrypt: '🔒 Chiffrer',
                 decrypt: '🔓 Déchiffrer',
+                keyInstruction: 'Choisissez la clé ou faites tourner le disque :',
                 slider: 'Faire tourner le disque :',
-                center: 'Décalage',
+                shift: 'Décalage',
                 input: 'Texte :',
                 output: 'Résultat :',
                 infoTitle: 'Qu’est-ce que le chiffre de César ?',
                 infoBody: 'Le chiffre de César décale chaque lettre de l’alphabet d’un nombre fixe. La clé est ce nombre de décalage ; pour déchiffrer, on décale en sens inverse du même montant.',
                 infoLinkText: 'Lire sur Wikipédia',
-                infoLinkUrl: 'https://fr.wikipedia.org/wiki/Chiffrement_par_d%C3%A9calage'
+                infoLinkUrl: 'https://fr.wikipedia.org/wiki/Chiffrement_par_d%C3%A9calage',
+                center: 'Décalage'
             },
             toUpper: defaultUpper,
             toLower: defaultLower
@@ -429,17 +483,17 @@
     function applyLabels() {
         const t = languages[currentLang].labels;
         document.getElementById('title').textContent = t.title;
-        document.getElementById('languageLabel').textContent = t.language;
         document.getElementById('labelEncrypt').textContent = t.encrypt;
         document.getElementById('labelDecrypt').textContent = t.decrypt;
+        document.getElementById('keyInstruction').textContent = t.keyInstruction;
         document.getElementById('sliderLabel').textContent = t.slider;
-        document.getElementById('centerTitle').textContent = t.center;
         document.getElementById('inputLabel').textContent = t.input;
         document.getElementById('outputLabel').textContent = t.output;
         document.getElementById('infoTitle').textContent = t.infoTitle;
         document.getElementById('infoBody').textContent = t.infoBody;
         document.getElementById('infoLink').textContent = t.infoLinkText;
         document.getElementById('infoLink').href = t.infoLinkUrl;
+        document.getElementById('centerTitle').textContent = t.center;
     }
 
     function ensureSampleIfEmpty(prevSample = '') {
@@ -476,7 +530,7 @@
             const btn = document.createElement('div');
             btn.className = 'key' + (idx === selectedIndex ? ' active' : '');
             btn.innerHTML = `<span>${ch}</span><small>${idx}</small>`;
-            btn.onclick = () => setKey(idx, 'key');
+            btn.onclick = () => setKey(idx);
             wrap.appendChild(btn);
         });
     }
@@ -528,7 +582,7 @@
         updateAll();
     }
 
-    function onModeChange() {
+    function handleModeChange() {
         const mode = document.querySelector('input[name="mode"]:checked').value;
         if (mode !== lastMode && mode === 'decrypt') {
             const input = document.getElementById('inputTxt');
@@ -557,9 +611,10 @@
     }
 
     function updateDial(visualShift) {
-        const sliderVal = document.getElementById('sliderVal');
+        const t = languages[currentLang].labels;
+        const sliderVal = document.getElementById('shiftValue');
         const centerVal = document.getElementById('centerValue');
-        sliderVal.textContent = `${alphabet[selectedIndex]} (${selectedIndex})`;
+        sliderVal.textContent = `${t.shift}: ${alphabet[selectedIndex]} (${selectedIndex})`;
         centerVal.textContent = `${alphabet[selectedIndex]} (${selectedIndex})`;
 
         cipherLetters.forEach((el, idx) => {
@@ -570,12 +625,12 @@
 
     function updateAll() {
         const shiftForText = effectiveShift();
-        const visualShift = selectedIndex; // keep dial aligned to chosen key
+        const visualShift = selectedIndex;
 
         updateDial(visualShift);
 
         const input = document.getElementById('inputTxt').value;
-        let result = "";
+        let result = '';
         for (let char of input) {
             const upper = activeToUpper(char);
             const idx = alphabet.indexOf(upper);
@@ -595,10 +650,10 @@
         document.getElementById('languageSelect').value = currentLang;
         applyLabels();
         buildKeys();
-        buildRings();
-        document.getElementById('shiftSlider').max = len - 1;
         ensureSampleIfEmpty();
         updateAll();
+        buildRings();
+        document.getElementById('shiftSlider').max = len - 1;
     }
 
     init();
