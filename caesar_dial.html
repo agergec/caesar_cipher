@@ -42,9 +42,7 @@
             text-align: center;
             margin: 0 0 6px 0;
             color: var(--primary);
-            letter-spacing: 0.4px;
         }
-        .subtitle { text-align: center; margin: 0 0 18px; color: #6b7280; }
 
         .language-switch {
             display: flex;
@@ -273,7 +271,6 @@
 <body>
 <div class="app">
     <h1 id="title">Türkçe Sezar Çarkı</h1>
-    <p class="subtitle" id="subtitle">Girdi ve çıktı alfabelerini bir çark üzerinde kaydırarak görselleştirin.</p>
 
     <div class="language-switch">
         <span id="languageLabel">Dil / Language:</span>
@@ -357,8 +354,7 @@
             alphabet: ['A','B','C','Ç','D','E','F','G','Ğ','H','I','İ','J','K','L','M','N','O','Ö','P','R','S','Ş','T','U','Ü','V','Y','Z'],
             sample: 'Merhaba Dünya',
             labels: {
-                title: '🇹🇷 Türkçe Sezar Çarkı',
-                subtitle: 'Girdi ve çıktı alfabelerini bir çark üzerinde kaydırarak görselleştirin.',
+                title: '🇹🇷 Sezar Şifreleme',
                 language: 'Dil / Language:',
                 encrypt: '🔒 Şifrele',
                 decrypt: '🔓 Çöz',
@@ -378,8 +374,7 @@
             alphabet: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split(''),
             sample: 'Hello World',
             labels: {
-                title: '🇬🇧 Caesar Dial',
-                subtitle: 'Visualize how plain and cipher rings align.',
+                title: '🇬🇧 Caesar Cipher',
                 language: 'Language:',
                 encrypt: '🔒 Encrypt',
                 decrypt: '🔓 Decrypt',
@@ -400,7 +395,6 @@
             sample: 'Bonjour le monde',
             labels: {
                 title: '🇫🇷 Chiffre de César',
-                subtitle: 'Visualisez l’alignement entre clair et chiffré.',
                 language: 'Langue :',
                 encrypt: '🔒 Chiffrer',
                 decrypt: '🔓 Déchiffrer',
@@ -435,7 +429,6 @@
     function applyLabels() {
         const t = languages[currentLang].labels;
         document.getElementById('title').textContent = t.title;
-        document.getElementById('subtitle').textContent = t.subtitle;
         document.getElementById('languageLabel').textContent = t.language;
         document.getElementById('labelEncrypt').textContent = t.encrypt;
         document.getElementById('labelDecrypt').textContent = t.decrypt;
